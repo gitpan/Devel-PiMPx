@@ -1,0 +1,5 @@
+#%define WORLD "world"
+#%print HELLO %{WORLD}-2.0
+#%define X "The quick brown fox jumps over the lazy dog"
+#%print print statements always prints newline.
+#%print %X

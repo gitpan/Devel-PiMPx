@@ -1,0 +1,4 @@
+#%define A 3
+#%define B 6
+#%define C %A * %B
+#%print %A * %B = %C

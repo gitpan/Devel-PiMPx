@@ -1,0 +1,13 @@
+#%ifdef __MACOSX
+	#%define OS "macosx"
+#%elif  __WIN32
+	#%define OS "win32"
+#%elif	__NEXT
+	#%define OS "NeXT"
+#%elif	__SUNOS
+	#%define OS "SunOS"
+#%elif	__LINUX
+	#%define OS "Linux"
+#%else
+	#%define OS "Unknown"
+#%endif

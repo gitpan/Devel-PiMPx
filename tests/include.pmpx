@@ -1,0 +1,4 @@
+#%addinc tests/
+#%define __LINUX 1
+#%include <if.pmpx>
+#%print %OS
