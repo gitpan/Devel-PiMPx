@@ -7,3 +7,7 @@ Revision history for Perl extension Devel::PiMPx.
 0.7.0 Mon May 13 16:32:31 2002
     - Moved to normal CPAN style and moved PiMPx to it's own module.
 
+0.7.1 Tue Jun 18 10:13:50 2002
+	- PiMPx.pm: Fixed a bug where quotemeta did it's work each
+	  time a variable was accessed :(
+

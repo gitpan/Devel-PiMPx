@@ -4,7 +4,7 @@ package Devel::PiMPx;
 use 5.006;
 use strict;
 use vars qw($VERSION $me %vars %cmds);
-$VERSION = '0.7.0';
+$VERSION = '0.7.1';
 
 # ### 
 # the valid pre-processor commands.
@@ -415,7 +415,6 @@ sub _getvars {
 					$curtext 	= quotemeta $curtext 	if $curtext;
 					$varbuf  	= quotemeta $varbuf  	if $varbuf;
 					$varname 	= quotemeta $varname	if $varname;
-					$vars{$varname} = quotemeta $vars{$varname} if $vars{$varname};
 
 					# define the vars if they're not defined.
 					defined $curtext or $curtext = undef;
