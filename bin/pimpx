@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # ###
 # PiMPx - the Perl-inclusive Macro Processor
-# (c) 2001-2002 - Ask Solem Hoel <ask@unixmonks.net>
+# (c) 2001-2007 - Ask Solem <ask@0x61736b.net>
 # All rights reserved.
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -16,20 +16,30 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program; if not, write to the Free Software
 #   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+# $Id: pimpx,v 1.4 2007/05/07 12:46:18 ask Exp $
+# $Source: /opt/CVS/pimpx/bin/pimpx,v $
+# $Author: ask $
+# $HeadURL$
+# $Revision: 1.4 $
+# $Date: 2007/05/07 12:46:18 $
 #####
-
-package main;
-
 use strict;
-use vars qw($me);
+use warnings;
+
+use vars qw($me $VERSION);
 use Devel::PiMPx;
+$VERSION = $Devel::PiMPx::VERSION;
 
 # ### basename of myself.
 $me = $0;
-$me =~ s%.*/%%;
+$me =~ s{.*/}{}xms;
 
-my $pp = new Devel::PiMPx(programname=>$me);
+my $pp = Devel::PiMPx->new(
+    programname => $me,
+);
 $pp->no_lineno(1); # default on.
+
 my $version = Version->new($Devel::PiMPx::VERSION);
 
 # ###
@@ -45,8 +55,8 @@ exit 0;
 # print version information.
 #
 sub _version {
-	printf STDERR "PiMPx - the Perl-inclusive Macro-Processor %s\n", $version->extended();
-	print  STDERR "Copyright 2001-2002 Ask Solem Hoel <ask\@unixmonks.net>\n";
+	printf {*STDERR} "PiMPx - the Perl-inclusive Macro-Processor %s\n", $version->extended();
+	print  {*STDERR} "Copyright 2001-2007 Ask Solem <ask\@0x61736b.net>\n";
 }
 
 # ##### void _usage(void)
@@ -62,7 +72,7 @@ sub _usage {
 sub _parseopts {
 	my @argv = @_;
 	my $file; # filename to return
-	while($_ = shift @argv) {
+	while ($_ = shift @argv) {
 		if	(s/^-$//) {
 			# ### 
 			# if we get a "-" the rest of the arguments 
@@ -111,14 +121,14 @@ sub _parseopts {
 				#
 				die "*** Missing path as argument to -I\n" unless $_;
 				print STDERR "*** New include path: $_\n" if $pp->debug;
-				push @INC;
+				push @INC, $_;
 		}
-		elsif	(s/^-D//) {
+		elsif	(s/^-D//xms) {
 				# ###
 				# -Dvar(=value)?: Define value to variable.
 				# if no value is given, variable is set to true (1).
 				#
-				if(/^(.+?)=(.+?)?$/) {
+				if (/^(.+?)=(.+?)?$/xms) {
 					next unless $2; # must have value if "=" character found.
 					print STDERR "*** Variable $1 set to $2\n" if $pp->debug;
 					$pp->_define("$1 $2");
@@ -136,11 +146,12 @@ sub _parseopts {
 				$file = $_;
 		}
 	};
-	unless($file) {
+	if (! $file) {
 		# ### print some help if no file given.
 		_version();
 		_usage();	
-		END; exit;
+		END;
+        exit;
 	}
 	return $file;
 }
@@ -148,7 +159,7 @@ sub _parseopts {
 #--------- Version.pm ----------#
 # ###
 # Version.pm - kernel/gnome like version library
-# (c) 1999-2002 Ask Solem Hoel <ask@unixmonks.net>
+# (c) 1999-2007 Ask Solem <ask@0x61736b.net>
 # All rights reserved.
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -276,6 +287,10 @@ __END__
 
 pimpx - The Perl-inclusive Macro Processor
 
+=head1 VERSION
+
+This document describes PiMPx version 0.8.0.
+
 =head1 SYNOPSIS
 
  pimpx {[-I/include|-Dvar|-Dvar=val|--debug|--lineno]] - {filename}|[-h|-V]}
@@ -286,17 +301,42 @@ PiMPx is the Perl-inclusive Macro Processor.
 It simplifies the management of bigger projects in Perl and can
 be used in other languages that use lines beginning with "#" as comments.
 
-=head1 EXPORT
-
-None by default.
-
-=head1 AUTHOR
-
-Ask Solem Hoel E<lt>ask@unixmonks.netE<gt>
-
 =head1 SEE ALSO
  
 L<perl>. L<Devel::PiMPx>
+
+=head1 AUTHOR
+
+Ask Solem E<lt>ask@0x61736b.netE<gt>
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright (c), 2007 Ask Solem C<< ask@0x61736b.net >>.
+
+All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.8.6 or,
+at your option, any later version of Perl 5 you may have available.head1 DISCLAIMER OF WARRANTY                                            
+                                                                         
+BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR THE
+SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE
+STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE 
+SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND  
+PERFORMANCE OF THE SOFTWARE IS WITH YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE,
+YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR, OR CORRECTION.   
+                                                                         
+IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY
+COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR REDISTRIBUTE THE
+SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE LIABLE TO YOU FOR DAMAGES,
+INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING
+OUT OF THE USE OR INABILITY TO USE THE SOFTWARE (INCLUDING BUT NOT LIMITED TO
+LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR
+THIRD PARTIES OR A FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER     
+SOFTWARE), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE    
+POSSIBILITY OF SUCH DAMAGES.
 
 =cut
 

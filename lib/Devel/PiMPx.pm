@@ -1,15 +1,21 @@
-#!/usr/bin/perl
 package Devel::PiMPx;
+# $Id: PiMPx.pm,v 1.4 2007/05/07 12:46:19 ask Exp $
+# $Source: /opt/CVS/pimpx/lib/Devel/PiMPx.pm,v $
+# $Author: ask $
+# $HeadURL$
+# $Revision: 1.4 $
+# $Date: 2007/05/07 12:46:19 $
 
 use 5.006;
 use strict;
-use vars qw($VERSION $me %vars %cmds);
-$VERSION = '0.7.1';
+use vars qw($VERSION $me);
+$VERSION = '0.8.0';
+$Devel::PiMPx::me = q{};
 
 # ### 
 # the valid pre-processor commands.
 # unless ifdef, ifndef and undef which are done when parsing.
-%cmds = (
+my %cmds = (
     "include"   => "_include",
     "require"   => "_include",
     "define"    => "_define",
@@ -21,44 +27,43 @@ $VERSION = '0.7.1';
     "addinc"    => "_addinc",
 );
 
-%vars = ();
+my %vars = ( );
 
-sub new
-{
-	my($pkg, %argv) = @_;
-	$pkg = ref $pkg || $pkg;
-	my $self = {};
-	bless $self, $pkg;
+sub new {
+	my ($class, %argv) = @_;
+	my $self = { };
+	bless $self, $class;
 	
 	$self->debug( delete $argv{debug} );
 	$self->no_lineno( delete $argv{no_lineno} );
 	$me = delete $argv{programname} || 'pimpx';
-	$self;
+
+	return $self;
 }
 
-sub debug
-{
-	my($self, $debug) = @_;
-	if(defined $debug) {
+sub debug {
+	my ($self, $debug) = @_;
+
+	if (defined $debug) {
 		$self->{__DEBUG} = $debug
-			if($debug || $debug == 0);
 	}
+
 	return $self->{__DEBUG};
 }
 
-sub no_lineno
-{
+sub no_lineno {
 	my($self, $no_lineno) = @_;
-	if(defined $no_lineno) {
+
+	if (defined $no_lineno) {
 		$self->{__NO_LINENO} = $no_lineno
-			if($no_lineno || $no_lineno == 0);
 	}
+
 	return $self->{__NO_LINENO};
 }	
 
-sub parse
-{
-	$_[0]->preprocess(@_);
+sub parse {
+    my $self = shift;
+	return $self->preprocess(@_);
 }
 
 # ### int preprocess(char file, bool include)
@@ -68,6 +73,7 @@ sub parse
 sub preprocess
 {
 	my ($self, $file, $bool_include) = @_;
+    no warnings;
 	# ###
 	# get the lines from the file.
 	# must have own function for this, because when going
@@ -472,14 +478,13 @@ sub _getvars {
 	return $text;
 }
 
-sub trim_end
-{
-	my($string) = (@_);
-	my $strlen = length($string);
-	if(substr($string, $strlen-1, $strlen) eq ' ') {
-		s/\s*$//;
+sub trim_end {
+	my ($string) = @_;
+	my $strlen = length $string;
+	if (substr($string, $strlen-1, $strlen) eq q{ }) {
+		s/\s*$//xms;
 	}
-	$string;
+	return $string;
 }
 
 1;
@@ -488,6 +493,10 @@ __END__
 =head1 NAME
 
 Devel::PiMPx - The Perl-inclusive Macro Processor
+
+=head1 VERSION
+
+This document describes PiMPx version 0.8.0.
 
 =head1 SYNOPSIS
 
@@ -507,16 +516,43 @@ PiMPx is the Perl-inclusive Macro Processor.
 It simplifies the management of bigger projects in Perl and can
 be used in other languages that use lines beginning with "#" as comments.
 
-=head1 EXPORT
-
-None by default.
-
-=head1 AUTHOR
-
-Ask Solem Hoel E<lt>ask@unixmonks.netE<gt>
-
 =head1 SEE ALSO
  
 L<perl>. L<pimpx>
+
+=head1 AUTHOR
+
+Ask Solem E<lt>ask@0x61736b.netE<gt>
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright (c), 2007 Ask Solem C<< ask@0x61736b.net >>.
+
+All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself, either Perl version 5.8.6 or,
+at your option, any later version of Perl 5 you may have available.
+
+=head1 DISCLAIMER OF WARRANTY                                            
+                                                                         
+BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR THE
+SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE
+STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE 
+SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND  
+PERFORMANCE OF THE SOFTWARE IS WITH YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE,
+YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR, OR CORRECTION.   
+                                                                         
+IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY
+COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR REDISTRIBUTE THE
+SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE LIABLE TO YOU FOR DAMAGES,
+INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING
+OUT OF THE USE OR INABILITY TO USE THE SOFTWARE (INCLUDING BUT NOT LIMITED TO
+LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR
+THIRD PARTIES OR A FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER     
+SOFTWARE), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE    
+POSSIBILITY OF SUCH DAMAGES.
 
 =cut

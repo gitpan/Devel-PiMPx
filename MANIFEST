@@ -1,13 +1,18 @@
 AUTHORS
-COPYING
+bin/pimpx
+Build.PL
 Changes
+examples/README
+lib/Devel/PiMPx.pm
+LICENSE
 Makefile.PL
-MANIFEST
-PiMPx.pm
+MANIFEST			This list of files
+META.yml
 README
-pimpx
-test.pl
-tests/define.pmpx
-tests/print.pmpx
-tests/if.pmpx
-tests/include.pmpx
+t/00-pod_coverage.t.disabled
+t/00-POD_valid.t
+t/01-pmp.t
+t/tests/define.pmpx
+t/tests/if.pmpx
+t/tests/include.pmpx
+t/tests/print.pmpx
